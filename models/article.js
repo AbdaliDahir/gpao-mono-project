@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
+const { Stock } = require('./stock');
 
 // export enum Article_type {
 //     MP = 'MP',
@@ -45,7 +46,12 @@ const articleSchema = mongoose.Schema({
     PF_ou_MP_ou_Piece_ou_SE: {
         type: String,
         default: "MP"
-    }
+    },
+    stocks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Stock',
+        required: false
+    }],
 })
 
 articleSchema.virtual('id').get(function () {
@@ -69,8 +75,9 @@ articleSchema.methods.joiValidate = function(article) {
         stock_maxi: Joi.number().integer(),
         pourcentage_de_perte: Joi.number(),
         inventaire: Joi.number().integer(),
-        PF_ou_MP_ou_Piece_ou_SE: Joi.string().valid("MP", "PF", "Piece", "SE")
-    });
+        PF_ou_MP_ou_Piece_ou_SE: Joi.string().valid("MP", "PF", "Piece", "SE"),
+        stocks: Joi.any(),
+    }).unknown();
 	return schema.validate(article);
 }
 
