@@ -33,29 +33,15 @@ router.post(`/`, async (req, res) => {
     res.send(article);
 })
 
-router.put('/:id',async (req, res)=> {
+router.put('/:id/:reference',async (req, res)=> {
     if(!mongoose.isValidObjectId(req.params.id)) {
-       return res.status(400).send('Invalid Article Id')
+      return res.status(400).send('Invalid Article Id')
     }
-    const category = await Category.findById(req.body.category);
-    if(!category) return res.status(400).send('Invalid Category')
 
-    const article = await Article.findByIdAndUpdate(
-        req.params.id,
-        {
-            name: req.body.name,
-            description: req.body.description,
-            richDescription: req.body.richDescription,
-            image: req.body.image,
-            brand: req.body.brand,
-            price: req.body.price,
-            category: req.body.category,
-            countInStock: req.body.countInStock,
-            rating: req.body.rating,
-            numReviews: req.body.numReviews,
-            isFeatured: req.body.isFeatured,
-        },
-        { new: true}
+    const article = await Article.findOneAndUpdate(
+      {reference: req.params.reference},
+      req.body,
+      { new: true}
     )
 
     if(!article)
@@ -74,27 +60,6 @@ router.delete('/:id', (req, res)=>{
     }).catch(err=>{
        return res.status(500).json({success: false, error: err}) 
     })
-})
-
-router.get(`/get/count`, async (req, res) =>{
-    const articleCount = await Article.countDocuments((count) => count)
-
-    if(!articleCount) {
-        res.status(500).json({success: false})
-    } 
-    res.send({
-        articleCount: articleCount
-    });
-})
-
-router.get(`/get/featured/:count`, async (req, res) =>{
-    const count = req.params.count ? req.params.count : 0
-    const articles = await Article.find({isFeatured: true}).limit(+count);
-
-    if(!articles) {
-        res.status(500).json({success: false})
-    } 
-    res.send(articles);
 })
 
 module.exports = router;
