@@ -21,6 +21,11 @@ const operationSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Article',
     require: true
+  },
+  postCharge: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PostCharge',
+    require: false
   }
 })
 
@@ -31,7 +36,8 @@ operationSchema.methods.joiValidate = function(operation) {
     temps_execution: Joi.number().integer().required(),
     temps_transfert: Joi.number().integer().required(),
     libelle_operation: Joi.string().alphanum(),
-    article: Joi.any()
+    article: Joi.any(),
+    postCharge: Joi.any(),
   });
 return schema.validate(operation);
 }

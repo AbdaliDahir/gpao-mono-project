@@ -6,14 +6,14 @@ const mongoose = require('mongoose');
 
 
 router.get(`/`, async (req, res) => {
-  // localhost:3000/api/v1/operations?articles=2342342,234234
+  // localhost:3000/api/v1/operations?articles=2342342
   let filter = {};
   if(req.query.articles)
   {
     filter = {article: req.query.articles.split(',')}
   }
 
-  const operationList = await Operation.find(filter).populate('article');
+  const operationList = await Operation.find(filter).populate('article', 'postCharge');
 
   if(!operationList) {
     res.status(500).json({success: false})
@@ -22,7 +22,7 @@ router.get(`/`, async (req, res) => {
 })
 
 router.get(`/:id`, async (req, res) => {
-    const operation = await Operation.findById(req.params.id).populate('article');
+    const operation = await Operation.findById(req.params.id).populate('article', 'postCharge');
 
     if(!operation) {
         res.status(500).json({success: false})
@@ -31,6 +31,7 @@ router.get(`/:id`, async (req, res) => {
 })
 
 router.post(`/`, async (req, res) => {
+  
     //TODO :: Maybe need to use reference instead of ID.
     const article = await Article.findById(req.body.article);
     if(!article) return res.status(400).send('Invalid Article')

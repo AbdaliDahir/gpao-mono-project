@@ -18,16 +18,19 @@ app.use(errorHandler);
 //Routes
 const articleRoutes = require('./routes/articles');
 const opeartionRoutes = require('./routes/operations');
+const postChargesRoutes = require('./routes/postCharges');
 
 const api = process.env.API_URL;
 
 app.use(`${api}/articles`, articleRoutes);
 app.use(`${api}/operations`, opeartionRoutes);
+app.use(`${api}/posts`, postChargesRoutes);
 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
     dbName: 'myFirstDatabase'
 })
 .then(()=>{
