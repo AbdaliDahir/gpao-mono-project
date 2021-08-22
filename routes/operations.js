@@ -3,6 +3,7 @@ const express = require('express');
 const { Article } = require('../models/article');
 const router = express.Router();
 const mongoose = require('mongoose');
+const { PostCharge } = require('../models/post_charge');
 
 
 router.get(`/`, async (req, res) => {
@@ -31,10 +32,21 @@ router.get(`/:id`, async (req, res) => {
 })
 
 router.post(`/`, async (req, res) => {
-  
+
     //TODO :: Maybe need to use reference instead of ID.
+    if(!mongoose.isValidObjectId(req.body.article)) {
+      return res.status(400).send('Invalid Article Id')
+    }
     const article = await Article.findById(req.body.article);
     if(!article) return res.status(400).send('Invalid Article')
+
+    if(req.body.post_charge) {
+      if(!mongoose.isValidObjectId(req.body.post_charge)) {
+        return res.status(400).send('Invalid PostCharge Id')
+      }
+      const postCharge = await PostCharge.findById(req.body.post_charge);
+      if(!postCharge) return res.status(400).send('Invalid Post')
+    }
 
     let operation = new Operation({
       numero_operation: req.body.numero_operation,
@@ -43,6 +55,7 @@ router.post(`/`, async (req, res) => {
       temps_transfert: req.body.temps_transfert,
       libelle_operation: req.body.libelle_operation,
       article: req.body.article,
+      postCharge: req.body.post_charge
     })
 
     operation = await operation.save();
@@ -62,6 +75,14 @@ router.put('/:id',async (req, res)=> {
 
     // TODO :: check relation between article and opeartion before update -- more logic .
 
+    if(req.body.post_charge) {
+      if(!mongoose.isValidObjectId(req.body.post_charge)) {
+        return res.status(400).send('Invalid PostCharge Id')
+      }
+      const postCharge = await PostCharge.findById(req.body.post_charge);
+      if(!postCharge) return res.status(400).send('Invalid Post')
+    }
+
     const operation = await Operation.findByIdAndUpdate(
         req.params.id,
         {
@@ -69,7 +90,8 @@ router.put('/:id',async (req, res)=> {
           temps_preparation: req.body.temps_preparation,
           temps_execution: req.body.temps_execution,
           temps_transfert: req.body.temps_transfert,
-          libelle_operation: req.body.libelle_operation
+          libelle_operation: req.body.libelle_operation,
+          postCharge: req.body.post_charge
         },
         { new: true}
     )
@@ -92,4 +114,4 @@ router.delete('/:id', (req, res)=>{
     })
 })
 
-module.exports =router;
+module.exports = router;
