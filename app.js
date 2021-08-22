@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -11,7 +11,7 @@ app.use(cors());
 app.options('*', cors())
 
 //middleware
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(morgan('tiny')); 
 app.use(errorHandler);
 
