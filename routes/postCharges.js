@@ -45,7 +45,7 @@ router.put('/:id',async (req, res)=> {
 })
 
 router.delete('/:id', (req, res)=>{
-    PostCharge.findByIdAndRemove(req.params.id).then(postCharge =>{
+    PostCharge.findByIdAndRemove(req.params.id).then(postCharge => {
         if(postCharge) {
             return res.status(200).json({success: true, message: 'the postCharge is deleted!'})
         } else {

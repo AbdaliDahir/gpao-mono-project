@@ -14,7 +14,9 @@ router.get(`/`, async (req, res) => {
     filter = {article: req.query.articles.split(',')}
   }
 
-  const operationList = await Operation.find(filter).populate('article', 'postCharge');
+  const operationList = await Operation.find(filter).populate([{path: 'article'}, {path: 'postCharge'}]); // full return
+
+  // const operationList = await Operation.find(filter).populate('article','postCharge'); // just with Ids.
 
   if(!operationList) {
     res.status(500).json({success: false})
@@ -23,7 +25,7 @@ router.get(`/`, async (req, res) => {
 })
 
 router.get(`/:id`, async (req, res) => {
-    const operation = await Operation.findById(req.params.id).populate('article', 'postCharge');
+    const operation = await Operation.findById(req.params.id).populate([{path: 'article'}, {path: 'postCharge'}]);
 
     if(!operation) {
         res.status(500).json({success: false})
