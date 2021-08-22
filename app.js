@@ -17,10 +17,12 @@ app.use(errorHandler);
 
 //Routes
 const articleRoutes = require('./routes/articles');
+const opeartionRoutes = require('./routes/operations');
 
 const api = process.env.API_URL;
 
 app.use(`${api}/articles`, articleRoutes);
+app.use(`${api}/operations`, opeartionRoutes);
 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING, {

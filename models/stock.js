@@ -18,14 +18,14 @@ const stockSchema = mongoose.Schema({
   }
 })
 
-stockSchema.methods.joiValidate = function(article) { 
+stockSchema.methods.joiValidate = function(stock) { 
   var schema = Joi.object({
     nmbr_magasin: Joi.string().alphanum().required(),
     quantity: Joi.number().integer(),
     periode: Joi.Date(),
     stock_type: Joi.string().valid("In", "Out")
   });
-return schema.validate(article);
+return schema.validate(stock);
 }
 
 exports.Stock = mongoose.model('Stock', stockSchema);
