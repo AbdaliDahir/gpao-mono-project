@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const mongoose = require('mongoose');
 
 const nomenclatureSchema = mongoose.Schema({
@@ -16,7 +17,6 @@ const nomenclatureSchema = mongoose.Schema({
     }
 })
 
-
 nomenclatureSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
@@ -24,5 +24,14 @@ nomenclatureSchema.virtual('id').get(function () {
 nomenclatureSchema.set('toJSON', {
     virtuals: true,
 });
+
+nomenclatureSchema.methods.joiValidate = function(nomenclature) { 
+    var schema = Joi.object({
+        compose: Joi.any().required(),
+        composant: Joi.any().required(),
+        quantite_de_composition: Joi.number().required(),
+    }).unknown();
+	return schema.validate(nomenclature);
+}
 
 exports.Nomenclature = mongoose.model('Nomenclature', nomenclatureSchema);
