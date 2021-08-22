@@ -1,24 +1,15 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
 
 const remplacementSchema = mongoose.Schema({
-    remplace_compose: {
+    remplace: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article',
+        ref: 'Nomenclature',
         required:true
     },
-    remplace_composant: {
+    remplacant: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article',
-        required:true
-    },
-    remplacant_compose: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article',
-        required:true
-    },
-    remplacant_composant: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article',
+        ref: 'Nomenclature',
         required:true
     },
     date_de_remplacement: {
@@ -34,5 +25,20 @@ remplacementSchema.virtual('id').get(function () {
 remplacementSchema.set('toJSON', {
     virtuals: true,
 });
+
+remplacementSchema.methods.joiValidate = function(remplacement) { 
+    var schema = Joi.object({
+        remplace: Joi.any().required(),
+        remplacant: Joi.any().required(),
+        date_de_remplacement: Joi.date()
+        // .format("YYYY-MM-DD")
+        // .min(today())
+        // .message('"date" cannot be earlier than today')
+        // .max(tomorrow())
+        // .message('"date" cannot be later than tomorrow')
+        .required(),
+    }).unknown();
+	return schema.validate(remplacement);
+}
 
 exports.Remplacement = mongoose.model('Remplacement', remplacementSchema);

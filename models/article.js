@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
-const { Stock } = require('./stock');
 
 // export enum Article_type {
 //     MP = 'MP',

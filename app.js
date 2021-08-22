@@ -20,6 +20,7 @@ const articleRoutes = require('./routes/articles');
 const opeartionRoutes = require('./routes/operations');
 const postChargesRoutes = require('./routes/postCharges');
 const nomenclatureRoutes = require('./routes/nomenclature');
+const remplacementRoutes = require('./routes/remplacement');
 
 const api = process.env.API_URL;
 
@@ -27,6 +28,7 @@ app.use(`${api}/articles`, articleRoutes);
 app.use(`${api}/operations`, opeartionRoutes);
 app.use(`${api}/posts`, postChargesRoutes);
 app.use(`${api}/nomenclatures`, nomenclatureRoutes);
+app.use(`${api}/remplacements`, remplacementRoutes);
 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING, {
